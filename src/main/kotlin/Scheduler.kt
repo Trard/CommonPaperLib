@@ -31,7 +31,7 @@ class Scheduler(private val plugin: Plugin) {
         else Task.BukkitTask(Bukkit.getScheduler().runTaskTimer(plugin, runnable, delay, period))
     }
 
-    fun runGlobalLater(location: Location, delayTicks: Long, runnable: Runnable) {
+    fun runGlobalLater(delayTicks: Long, runnable: Runnable) {
         if (isFolia) Bukkit.getGlobalRegionScheduler().runDelayed(plugin, { runnable.run() }, delayTicks )
         else Task.BukkitTask(Bukkit.getScheduler().runTaskLater(plugin, runnable, delayTicks))
     }
