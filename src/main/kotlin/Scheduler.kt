@@ -44,7 +44,7 @@ class Scheduler(private val plugin: Plugin) {
         else Task.BukkitTask(Bukkit.getScheduler().runTaskLater(plugin, runnable, delayTicks))
     }
 
-    fun runAtEntityLater(entity: Entity, retired: Runnable?, delayTicks: Long, runnable: Runnable) {
+    fun runAtEntityLater(entity: Entity, delayTicks: Long, retired: Runnable?, runnable: Runnable) {
         if (isFolia) entity.scheduler.runDelayed(plugin, { runnable.run() }, retired, delayTicks )
         else Task.BukkitTask(Bukkit.getScheduler().runTaskLater(plugin, runnable, delayTicks))
     }
