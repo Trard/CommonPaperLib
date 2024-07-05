@@ -1,11 +1,19 @@
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask
 import org.bukkit.Bukkit
 import org.bukkit.Location
+import org.bukkit.entity.Entity
 import org.bukkit.plugin.Plugin
 
 
 class Scheduler(private val plugin: Plugin) {
-    private val isFolia: Boolean = Bukkit.getVersion().contains("Folia")
+    private val isFolia = run {
+        try {
+            Class.forName("io.papermc.paper.threadedregions.RegionizedServer")
+            true
+        } catch (e: ClassNotFoundException) {
+            false
+        }
+    }
 
     fun runInRegion(location: Location, runnable: Runnable) {
         if (isFolia) Bukkit.getRegionScheduler().run(plugin, location) { runnable.run() }
@@ -33,6 +41,11 @@ class Scheduler(private val plugin: Plugin) {
 
     fun runGlobalLater(delayTicks: Long, runnable: Runnable) {
         if (isFolia) Bukkit.getGlobalRegionScheduler().runDelayed(plugin, { runnable.run() }, delayTicks )
+        else Task.BukkitTask(Bukkit.getScheduler().runTaskLater(plugin, runnable, delayTicks))
+    }
+
+    fun runAtEntityLater(entity: Entity, retired: Runnable, delayTicks: Long, runnable: Runnable) {
+        if (isFolia) entity.scheduler.runDelayed(plugin, { runnable.run() }, retired, delayTicks )
         else Task.BukkitTask(Bukkit.getScheduler().runTaskLater(plugin, runnable, delayTicks))
     }
 
