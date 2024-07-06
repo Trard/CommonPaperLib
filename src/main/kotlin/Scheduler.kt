@@ -1,3 +1,5 @@
+package com.github.trard
+
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask
 import org.bukkit.Bukkit
 import org.bukkit.Location
