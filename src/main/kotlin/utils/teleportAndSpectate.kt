@@ -13,7 +13,7 @@ fun teleportAndSpectate(scheduler: Scheduler, spectator: Player, target: Player)
         spectator.spectatorTarget = null
     }
 
-    scheduler.runAtEntityLater(target, 60, null) {
+    scheduler.runAtEntityLater(target, 40, null) {
         spectator.teleportAsync(target.location)
         spectator.gameMode = GameMode.SPECTATOR
         spectator.spectatorTarget = target
