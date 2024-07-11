@@ -8,7 +8,7 @@ import org.bukkit.plugin.Plugin
 
 
 class Scheduler(private val plugin: Plugin) {
-    private val isFolia = run {
+    val isFolia = run {
         try {
             Class.forName("io.papermc.paper.threadedregions.RegionizedServer")
             true
