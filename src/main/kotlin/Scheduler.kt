@@ -17,13 +17,13 @@ class Scheduler(private val plugin: Plugin) {
         }
     }
 
-    fun runInRegion(location: Location, runnable: Runnable) {
-        if (isFolia) Bukkit.getRegionScheduler().run(plugin, location) { runnable.run() }
+    fun runInRegion(location: Location, runnable: Runnable): Task {
+        return if (isFolia) Task.FoliaTask(Bukkit.getRegionScheduler().run(plugin, location) { runnable.run() })
         else Task.BukkitTask(Bukkit.getScheduler().runTask(plugin, runnable))
     }
 
-    fun runInRegionLater(location: Location, delayTicks: Long, runnable: Runnable) {
-        if (isFolia) Bukkit.getRegionScheduler().runDelayed(plugin, location, { runnable.run() }, delayTicks )
+    fun runInRegionLater(location: Location, delayTicks: Long, runnable: Runnable): Task {
+        return if (isFolia) Task.FoliaTask(Bukkit.getRegionScheduler().runDelayed(plugin, location, { runnable.run() }, delayTicks ))
         else Task.BukkitTask(Bukkit.getScheduler().runTaskLater(plugin, runnable, delayTicks))
     }
 
@@ -41,18 +41,20 @@ class Scheduler(private val plugin: Plugin) {
         else Task.BukkitTask(Bukkit.getScheduler().runTaskTimer(plugin, runnable, delayTicks, period))
     }
 
-    fun runGlobalLater(delayTicks: Long, runnable: Runnable) {
-        if (isFolia) Bukkit.getGlobalRegionScheduler().runDelayed(plugin, { runnable.run() }, delayTicks )
+    fun runGlobalLater(delayTicks: Long, runnable: Runnable): Task {
+        return if (isFolia) Task.FoliaTask(Bukkit.getGlobalRegionScheduler().runDelayed(plugin, { runnable.run() }, delayTicks ))
         else Task.BukkitTask(Bukkit.getScheduler().runTaskLater(plugin, runnable, delayTicks))
     }
 
-    fun runAtEntityLater(entity: Entity, delayTicks: Long, retired: Runnable?, runnable: Runnable) {
-        if (isFolia) entity.scheduler.runDelayed(plugin, { runnable.run() }, retired, delayTicks )
+    fun runAtEntityLater(entity: Entity, delayTicks: Long, retired: Runnable?, runnable: Runnable): Task? {
+        return if (isFolia) entity.scheduler.runDelayed(plugin, { runnable.run() }, retired, delayTicks )
+            ?.let { Task.FoliaTask(it) }
         else Task.BukkitTask(Bukkit.getScheduler().runTaskLater(plugin, runnable, delayTicks))
     }
 
-    fun runAtEntityAtFixedRate(entity: Entity, delayTicks: Long, periodTicks: Long, retired: Runnable?, runnable: Runnable) {
-        if (isFolia) entity.scheduler.runAtFixedRate(plugin, { runnable.run() }, retired, delayTicks, periodTicks )
+    fun runAtEntityAtFixedRate(entity: Entity, delayTicks: Long, periodTicks: Long, retired: Runnable?, runnable: Runnable): Task? {
+        return if (isFolia) entity.scheduler.runAtFixedRate(plugin, { runnable.run() }, retired, delayTicks, periodTicks )
+            ?.let { Task.FoliaTask(it) }
         else Task.BukkitTask(Bukkit.getScheduler().runTaskTimer(plugin, runnable, delayTicks, periodTicks))
     }
 
