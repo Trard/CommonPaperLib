@@ -1,4 +1,4 @@
-package com.github.trard.utils
+package com.github.trard.functions
 
 import com.github.trard.Scheduler
 import org.bukkit.GameMode
